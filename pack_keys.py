@@ -38,9 +38,9 @@ def main():
         private_key_crypt = generate_aes_crypt(private_key, master_key)
 
         print(f"Writing keys ({i})...")
-        with open(f'{args.output_pks}/private_key_{i}.pem_crypt', 'wb') as f:
+        with open(os.path.join(args.output_pks, f"private_key_{i}.pem_crypt"), 'wb') as f:
             f.write(private_key_crypt)
-        with open(f'{args.outout_pub_ks}/public_key_{i}.pem', 'wb') as f:
+        with open(os.path.join(args.outout_pub_ks, f"public_key_{i}.pem"), 'wb') as f:
             f.write(public_key)
     
     print("Generating AES keys...")
@@ -51,7 +51,7 @@ def main():
         key_crypt = generate_aes_crypt(key, master_key)
 
         print(f"Writing keys ({i})...")
-        with open(f'{args.output_pks}/aes_key_{i}.crypt', 'wb') as f:
+        with open(os.path.join(args.output_pks, f"aes_key_{i}.crypt"), 'wb') as f:
             f.write(key_crypt)
 
     print("Writing metadata file...")
@@ -60,7 +60,7 @@ def main():
         "num_keys_aes": args.num_keys_aes,
         "num_keys_rsa": args.num_keys_rsa,
     }
-    with open(f'{args.output_pks}/metadata.json', 'wb') as f:
+    with open(os.path.join(args.output_pks, 'metadata.json'), 'wb') as f:
         json_str = json.dumps(metadata, indent=4)
         e_json_str = generate_aes_crypt(json_str.encode(), master_key)
         f.write(e_json_str)

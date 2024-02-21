@@ -4,6 +4,7 @@ try:
     from Crypto.Cipher import AES
     import argparse
     import json
+    import os
 except ImportError:
     print("Please run 'pip install -r requirements.txt'")
     exit(1)
@@ -25,6 +26,9 @@ def main():
         print("Invalid hex string")
         return
     
+    print("Creating output directory...")
+    os.makedirs(args.output_pks, exist_ok=True)
+    
     print("Reading metadata file...")
     with open(f'metadata.json', 'rb') as f:
         metadata = decrypt_aes(f, master_key)
@@ -35,14 +39,14 @@ def main():
     for i in range(metadata['num_keys_rsa']):
         with open(f'private_key_{i}.pem_crypt', 'rb') as f:
             private_key = decrypt_aes(f, master_key)
-            with open(f'{args.output_pks}/private_key_{i}.pem', 'wb') as f:
+            with open(os.path.join(args.output_pks, f"private_key_{i}.pem"), 'wb') as f:
                 f.write(private_key)
     
     print("Reading private AES keys...")
     for i in range(metadata['num_keys_aes']):
         with open(f'aes_key_{i}.crypt', 'rb') as f:
             key = decrypt_aes(f, master_key)
-            with open(f'{args.output_pks}/aes_key_{i}.key', 'wb') as f:
+            with open(os.path.join(args.output_pks, f"aes_key_{i}.key"), 'wb') as f:
                 f.write(key)
     
     print("Done")
