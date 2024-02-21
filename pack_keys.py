@@ -53,6 +53,8 @@ def main():
         print(f"Writing keys ({i})...")
         with open(os.path.join(args.output_pks, f"aes_key_{i}.crypt"), 'wb') as f:
             f.write(key_crypt)
+        with open(os.path.join(args.outout_pub_ks, f"aes_key_{i}.key"), 'wb') as f:
+            f.write(key)
 
     print("Writing metadata file...")
     metadata = {
